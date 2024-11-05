@@ -25,7 +25,7 @@ class PortfolioService implements IPortfolioService {
         for (const stockData of stocksData) {
             if (stockData.status !== "fulfilled") continue;
             const { amount, valueStart, valueEnd } = stockData.value;
-            const stockProfit = amount * (valueStart - valueEnd);
+            const stockProfit = amount * (valueEnd - valueStart);
             profit += stockProfit;
         }
         return profit;
