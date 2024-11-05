@@ -5,7 +5,8 @@ import {
     isWeekend,
     lightFormat,
     nextMonday,
-    previousFriday,
+    subBusinessDays,
+    previousFriday
 } from "date-fns";
 import HttpClient from "./http.service.ts";
 import type { StockPriceResponse } from "../types/stock-price-response.type.ts";
@@ -39,6 +40,7 @@ class StockService implements IStockService {
         });
         const queryModel = stockQueryMapper.map(model);
         const response = await http.get<StockPriceResponse>(queryModel);
+        if (response.data.length === 0) return this.getPriceByDate(assetId, subBusinessDays(date, 1))
         return new StockPriceResponseModel({
             ...response.data[0].attributes,
             assetId: parseInt(response.data[0].id),
