@@ -1,3 +1,4 @@
+import StockPriceModel from "../models/stock-price.model.ts";
 import StockService, { IStockService } from "../services/stock.service.ts";
 
 const stockService: IStockService = new StockService();
@@ -21,16 +22,9 @@ class Stock implements IStock {
     }
 
     async price(date: Date): Promise<number> {
-        try {
-            const stockData = await this._stockService.getPriceByDate(
-                this.assetId,
-                date,
-            );
-            return stockData.price;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+        const model = new StockPriceModel({ realAssetId: this.assetId, date });
+        const stockData = await this._stockService.getPriceByDate(model);
+        return stockData.price;
     }
 }
 

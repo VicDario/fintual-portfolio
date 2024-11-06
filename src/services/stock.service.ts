@@ -19,22 +19,22 @@ import StockPriceResponseMapper from "../mappers/stock-price-response.mapper.ts"
 const http: IHttpClient = new HttpClient("https://fintual.cl/api");
 const stockQueryMapper: IMapper<StockPriceModel, HttpQueryModel> =
     new StockPriceQueryMapper();
-const stockPriceResponseMapper: IMapper<StockPriceResponse, StockPriceResponseModel> =
-    new StockPriceResponseMapper();
+const stockPriceResponseMapper: IMapper<
+    StockPriceResponse,
+    StockPriceResponseModel
+> = new StockPriceResponseMapper();
 
 export interface IStockService {
     getPriceByDate: (
-        assetId: number,
-        date: Date,
+        model: StockPriceModel,
     ) => Promise<StockPriceResponseModel>;
 }
 
 class StockService implements IStockService {
-    private readonly _dateFormat = "yyyy-MM-dd";
-
     constructor(
         private readonly _http: IHttpClient = http,
-        private _queryMapper: IMapper<StockPriceModel, HttpQueryModel> = stockQueryMapper,
+        private _queryMapper: IMapper<StockPriceModel, HttpQueryModel> =
+            stockQueryMapper,
         private _responseMapper: IMapper<
             StockPriceResponse,
             StockPriceResponseModel
@@ -42,18 +42,13 @@ class StockService implements IStockService {
     ) {}
 
     async getPriceByDate(
-        assetId: number,
-        date: Date,
+        model: StockPriceModel,
     ): Promise<StockPriceResponseModel> {
-        date = this._getNearestBusinessDate(date);
-        const model = new StockPriceModel({
-            realAssetId: assetId,
-            date: lightFormat(date, this._dateFormat),
-        });
+        model.date = this._getNearestBusinessDate(model.date);
         const queryModel = this._queryMapper.map(model);
         const response = await this._http.get<StockPriceResponse>(queryModel);
         if (response.data.length === 0) {
-            return this.getPriceByDate(assetId, subBusinessDays(date, 1));
+            model.date = subBusinessDays(model.date, 1);
         }
         return this._responseMapper.map(response);
     }

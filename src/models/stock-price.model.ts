@@ -1,11 +1,11 @@
 type StockPriceModelParams = {
     realAssetId: number;
-    date: string;
+    date: Date;
 };
 
 class StockPriceModel {
     realAssetId: number;
-    date: string;
+    date: Date;
 
     constructor(params: StockPriceModelParams) {
         this.realAssetId = params.realAssetId;
