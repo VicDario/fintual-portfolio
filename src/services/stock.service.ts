@@ -49,6 +49,7 @@ class StockService implements IStockService {
         const response = await this._http.get<StockPriceResponse>(queryModel);
         if (response.data.length === 0) {
             model.date = subBusinessDays(model.date, 1);
+            return this.getPriceByDate(model);
         }
         return this._responseMapper.map(response);
     }
