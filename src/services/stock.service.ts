@@ -1,13 +1,5 @@
 import StockPriceQueryMapper from "../mappers/stock-price-query.mapper.ts";
 import StockPriceModel from "../models/stock-price.model.ts";
-import {
-    isFuture,
-    isWeekend,
-    lightFormat,
-    nextMonday,
-    previousFriday,
-    subBusinessDays,
-} from "date-fns";
 import HttpClient from "./http.service.ts";
 import type { StockPriceResponse } from "../types/stock-price-response.type.ts";
 import StockPriceResponseModel from "../models/stock-price-response.model.ts";
@@ -15,6 +7,7 @@ import type HttpQueryModel from "../models/http.model.ts";
 import type { IMapper } from "../mappers/IMapper.ts";
 import type { IHttpClient } from "./http.service.ts";
 import StockPriceResponseMapper from "../mappers/stock-price-response.mapper.ts";
+import DateUtils, { IDateUtils } from "../utils/date.utils.ts";
 
 const http: IHttpClient = new HttpClient("https://fintual.cl/api");
 const stockQueryMapper: IMapper<StockPriceModel, HttpQueryModel> =
@@ -23,6 +16,8 @@ const stockPriceResponseMapper: IMapper<
     StockPriceResponse,
     StockPriceResponseModel
 > = new StockPriceResponseMapper();
+
+const dateUtils: IDateUtils = new DateUtils();
 
 export interface IStockService {
     getPriceByDate: (
@@ -39,6 +34,7 @@ class StockService implements IStockService {
             StockPriceResponse,
             StockPriceResponseModel
         > = stockPriceResponseMapper,
+        private _dateUtils: IDateUtils = dateUtils,
     ) {}
 
     async getPriceByDate(
@@ -48,18 +44,18 @@ class StockService implements IStockService {
         const queryModel = this._queryMapper.map(model);
         const response = await this._http.get<StockPriceResponse>(queryModel);
         if (response.data.length === 0) {
-            model.date = subBusinessDays(model.date, 1);
+            model.date = this._dateUtils.subBusinessDays(model.date, 1);
             return this.getPriceByDate(model);
         }
         return this._responseMapper.map(response);
     }
 
     private _getNearestBusinessDate(date: Date): Date {
-        if (isWeekend(date)) {
-            date = nextMonday(date);
+        if (this._dateUtils.isWeekend(date)) {
+            date = this._dateUtils.nextMonday(date);
         }
-        if (isFuture(date)) {
-            date = previousFriday(date);
+        if (this._dateUtils.isFuture(date)) {
+            date = this._dateUtils.previousFriday(date);
         }
         return date;
     }
