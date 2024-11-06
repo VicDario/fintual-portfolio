@@ -17,19 +17,24 @@ class PortfolioService implements IPortfolioService {
         const stocksData = await Promise.allSettled(
             stocks.map(async (stock) => ({
                 amount: stock.amount,
-                valueStart: await stock.price(dateStart),
-                valueEnd: await stock.price(dateEnd),
+                initialValue: await stock.price(dateStart),
+                finalValue: await stock.price(dateEnd),
             })),
         );
         let profit = 0;
         for (const stockData of stocksData) {
             if (stockData.status !== "fulfilled") continue;
-            const { amount, valueStart, valueEnd } = stockData.value;
-            const stockProfit = amount * (valueEnd - valueStart);
-            profit += stockProfit;
+            const { amount, initialValue, finalValue } = stockData.value;
+            profit += this.calculateStockProfit(amount, initialValue, finalValue);
         }
         return profit;
     }
+
+    calculateStockProfit = (
+        stockAmount: number,
+        initialValue: number,
+        finalValue: number,
+    ): number => stockAmount * (finalValue - initialValue); // JS things can be resolve with a safe currrency library :D
 }
 
 export default PortfolioService;
