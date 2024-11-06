@@ -10,11 +10,9 @@ export interface IHttpClient {
 
 class HttpClient implements IHttpClient {
     private readonly _baseUrl: URL;
-    private readonly _http: IHttp;
 
-    constructor(baseUrl: string, http: IHttp = fetch) {
+    constructor(baseUrl: string, private readonly _http: IHttp = fetch) {
         this._baseUrl = new URL(baseUrl);
-        this._http = http;
     }
 
     async get<T>(httpQuery: HttpQueryModel): Promise<T> {
