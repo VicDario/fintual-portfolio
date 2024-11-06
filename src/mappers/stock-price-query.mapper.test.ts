@@ -8,7 +8,7 @@ import type { IMapper } from "./IMapper.ts";
 Deno.test("StockPriceQueryMapper", async (t) => {
     await t.step("Map a valid HttpQueryModel instance", () => {
         const realAssetId = faker.number.int();
-        const date = faker.date.anytime().toLocaleString();
+        const date = faker.date.anytime();
         const model = new StockPriceModel({ realAssetId, date });
         const mapper: IMapper<StockPriceModel, HttpQueryModel> =
             new StockPriceQueryMapper();
@@ -17,6 +17,11 @@ Deno.test("StockPriceQueryMapper", async (t) => {
 
         assertInstanceOf(query, HttpQueryModel);
         assertEquals(query.path, `/real_assets/${model.realAssetId}/days`);
-        assertEquals(query.queryParams.get("date"), date);
+        assertEquals(
+            query.queryParams.get("date"),
+            `${date.getFullYear()}-${
+                (date.getMonth() + 1).toString().padStart(2, "0")
+            }-${date.getDate().toString().padStart(2, "0")}`,
+        );
     });
 });
