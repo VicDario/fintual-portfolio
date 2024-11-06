@@ -14,10 +14,13 @@ import StockPriceResponseModel from "../models/stock-price-response.model.ts";
 import type HttpQueryModel from "../models/http.model.ts";
 import type { IMapper } from "../mappers/IMapper.ts";
 import type { IHttpClient } from "./http.service.ts";
+import StockPriceResponseMapper from "../mappers/stock-price-response.mapper.ts";
 
 const http: IHttpClient = new HttpClient("https://fintual.cl/api");
 const stockQueryMapper: IMapper<StockPriceModel, HttpQueryModel> =
     new StockPriceQueryMapper();
+const stockPriceResponseMapper: IMapper<StockPriceResponse, StockPriceResponseModel> =
+    new StockPriceResponseMapper();
 
 export interface IStockService {
     getPriceByDate: (
@@ -29,7 +32,14 @@ export interface IStockService {
 class StockService implements IStockService {
     private readonly _dateFormat = "yyyy-MM-dd";
 
-    constructor(private readonly _http: IHttpClient = http) {}
+    constructor(
+        private readonly _http: IHttpClient = http,
+        private _queryMapper: IMapper<StockPriceModel, HttpQueryModel> = stockQueryMapper,
+        private _responseMapper: IMapper<
+            StockPriceResponse,
+            StockPriceResponseModel
+        > = stockPriceResponseMapper,
+    ) {}
 
     async getPriceByDate(
         assetId: number,
@@ -40,15 +50,12 @@ class StockService implements IStockService {
             realAssetId: assetId,
             date: lightFormat(date, this._dateFormat),
         });
-        const queryModel = stockQueryMapper.map(model);
+        const queryModel = this._queryMapper.map(model);
         const response = await this._http.get<StockPriceResponse>(queryModel);
         if (response.data.length === 0) {
             return this.getPriceByDate(assetId, subBusinessDays(date, 1));
         }
-        return new StockPriceResponseModel({
-            ...response.data[0].attributes,
-            assetId: parseInt(response.data[0].id),
-        });
+        return this._responseMapper.map(response);
     }
 
     private _getNearestBusinessDate(date: Date): Date {
