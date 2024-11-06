@@ -8,6 +8,7 @@
         "date-fns": "npm:date-fns@^4.1.0"
     },
     "fmt": {
-        "indentWidth": 4
+        "indentWidth": 4,
+        "exclude": ["coverage"]
     }
 }
