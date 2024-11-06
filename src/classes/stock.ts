@@ -2,7 +2,13 @@ import StockService, { IStockService } from "../services/stock.service.ts";
 
 const stockService: IStockService = new StockService();
 
-class Stock {
+export interface IStock {
+    assetId: number;
+    amount: number;
+    price(date: Date): Promise<number>;
+}
+
+class Stock implements IStock {
     assetId: number;
     amount: number;
     constructor(assetId: number, amount: number) {

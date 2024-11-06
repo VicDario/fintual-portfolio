@@ -1,7 +1,12 @@
 import { IPortfolioService } from "../services/portfolio.service.ts";
 import Stock from "./stock.ts";
 
-class Portfolio {
+export interface IPortfolio {
+    addStock(assetId: number, amount: number): void;
+    profit(dateStart: Date, dateEnd: Date): Promise<number>;
+}
+
+class Portfolio implements IPortfolio {
     private readonly _stocks: Stock[] = [];
 
     constructor(private readonly _portfolioService: IPortfolioService) {}
