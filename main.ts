@@ -11,6 +11,7 @@ const portfolio = new Portfolio(portfolioService);
 
 portfolio.addStock(10206, 2.4);
 portfolio.addStock(7963, 3.4);
+portfolio.addStock(18922, 7);
 
 const dateStart = new Date("2023-10-10 12:00");
 const dateEnd = new Date();
