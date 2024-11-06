@@ -29,6 +29,8 @@ export interface IStockService {
 class StockService implements IStockService {
     private readonly _dateFormat = "yyyy-MM-dd";
 
+    constructor(private readonly _http: IHttpClient = http) {}
+
     async getPriceByDate(
         assetId: number,
         date: Date,
@@ -39,7 +41,7 @@ class StockService implements IStockService {
             date: lightFormat(date, this._dateFormat),
         });
         const queryModel = stockQueryMapper.map(model);
-        const response = await http.get<StockPriceResponse>(queryModel);
+        const response = await this._http.get<StockPriceResponse>(queryModel);
         if (response.data.length === 0) {
             return this.getPriceByDate(assetId, subBusinessDays(date, 1));
         }
