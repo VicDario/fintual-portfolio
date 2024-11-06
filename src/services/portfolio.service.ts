@@ -1,16 +1,16 @@
-import Stock from "../classes/stock.ts";
+import { IStock } from "../classes/stock.ts";
 
 export interface IPortfolioService {
-    calculateProfit: (
-        stocks: Stock[],
+    calculateProfit(
+        stocks: IStock[],
         dateStart: Date,
         dateEnd: Date,
-    ) => Promise<number>;
+    ): Promise<number>;
 }
 
 class PortfolioService implements IPortfolioService {
     async calculateProfit(
-        stocks: Stock[],
+        stocks: IStock[],
         dateStart: Date,
         dateEnd: Date,
     ): Promise<number> {
