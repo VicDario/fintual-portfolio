@@ -11,14 +11,18 @@ export interface IStock {
 class Stock implements IStock {
     assetId: number;
     amount: number;
-    constructor(assetId: number, amount: number) {
+    constructor(
+        assetId: number,
+        amount: number,
+        private readonly _stockService: IStockService = stockService,
+    ) {
         this.assetId = assetId;
         this.amount = amount;
     }
 
     async price(date: Date): Promise<number> {
         try {
-            const stockData = await stockService.getPriceByDate(
+            const stockData = await this._stockService.getPriceByDate(
                 this.assetId,
                 date,
             );
