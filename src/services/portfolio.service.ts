@@ -25,7 +25,11 @@ class PortfolioService implements IPortfolioService {
         for (const stockData of stocksData) {
             if (stockData.status !== "fulfilled") continue;
             const { amount, initialValue, finalValue } = stockData.value;
-            profit += this.calculateStockProfit(amount, initialValue, finalValue);
+            profit += this.calculateStockProfit(
+                amount,
+                initialValue,
+                finalValue,
+            );
         }
         return profit;
     }
