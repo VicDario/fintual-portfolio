@@ -16,7 +16,7 @@ Deno.test("StockPriceQueryMapper", async (t) => {
         const query = mapper.map(model);
 
         assertInstanceOf(query, HttpQueryModel);
-        assertEquals(query.path, `/${model.realAssetId}/days`);
+        assertEquals(query.path, `/real_assets/${model.realAssetId}/days`);
         assertEquals(query.queryParams.get("date"), date);
     });
 });
