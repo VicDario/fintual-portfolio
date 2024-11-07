@@ -8,6 +8,9 @@ export type PortfolioProfitMapperParams = {
 
 class PortfolioProfitMapper
     implements IMapper<PortfolioProfitMapperParams, PortfolioProfitModel> {
+
+   private _decimals: number = 2; 
+
     map(params: PortfolioProfitMapperParams): PortfolioProfitModel {
         return new PortfolioProfitModel({
             profit: params.profit,
@@ -18,7 +21,7 @@ class PortfolioProfitMapper
     }
 
     private _formatAnnualizedReturn(annualizedReturn: number): string {
-        return `${(annualizedReturn * 10).toFixed(2)}%`;
+        return `${(annualizedReturn * 10).toFixed(this._decimals)}%`;
     }
 }
 
