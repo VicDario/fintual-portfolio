@@ -1,9 +1,10 @@
+import PortfolioProfitModel from "../models/portfolio-profit.model.ts";
 import { IPortfolioService } from "../services/portfolio.service.ts";
 import Stock from "./stock.ts";
 
 export interface IPortfolio {
     addStock(assetId: number, amount: number): void;
-    profit(dateStart: Date, dateEnd: Date): Promise<number>;
+    profit(dateStart: Date, dateEnd: Date): Promise<PortfolioProfitModel>;
 }
 
 class Portfolio implements IPortfolio {
@@ -15,7 +16,10 @@ class Portfolio implements IPortfolio {
         this._stocks.push(new Stock(assetId, amount));
     }
 
-    async profit(dateStart: Date, dateEnd: Date): Promise<number> {
+    async profit(
+        dateStart: Date,
+        dateEnd: Date,
+    ): Promise<PortfolioProfitModel> {
         const profit = await this._portfolioService.calculateProfit(
             this._stocks,
             dateStart,
