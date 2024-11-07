@@ -21,7 +21,7 @@ class PortfolioProfitMapper
     }
 
     private _formatAnnualizedReturn(annualizedReturn: number): string {
-        return `${(annualizedReturn * 10).toFixed(this._decimals)}%`;
+        return `${(annualizedReturn * 100).toFixed(this._decimals)}%`;
     }
 }
 
