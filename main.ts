@@ -18,4 +18,5 @@ const dateEnd = new Date();
 
 const profit = await portfolio.profit(dateStart, dateEnd);
 
-console.log(`Profit ${profit}`);
+console.log(`Profit: ${profit.profit}`);
+console.log(`Annualized Return: ${profit.annualizedReturn}`);
