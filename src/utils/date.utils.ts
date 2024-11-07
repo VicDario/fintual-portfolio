@@ -1,10 +1,10 @@
 import {
+    differenceInDays,
     isFuture,
     isWeekend,
     nextMonday,
     previousFriday,
     subBusinessDays,
-    differenceInDays,
 } from "date-fns";
 
 export interface IDateUtils {
@@ -36,7 +36,7 @@ class DateUtils implements IDateUtils {
         return previousFriday(date);
     }
     differenceInDays(datestart: Date, dateEnd: Date): number {
-        return differenceInDays(datestart, dateEnd);
+        return differenceInDays(dateEnd, datestart);
     }
 }
 
