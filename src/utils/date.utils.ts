@@ -4,6 +4,7 @@ import {
     nextMonday,
     previousFriday,
     subBusinessDays,
+    differenceInDays,
 } from "date-fns";
 
 export interface IDateUtils {
@@ -12,6 +13,7 @@ export interface IDateUtils {
     nextMonday(date: Date): Date;
     previousFriday(date: Date): Date;
     subBusinessDays(date: Date, amount: number): Date;
+    differenceInDays(dateStart: Date, dateEnd: Date): number;
 }
 
 /**
@@ -32,6 +34,9 @@ class DateUtils implements IDateUtils {
     }
     previousFriday(date: Date): Date {
         return previousFriday(date);
+    }
+    differenceInDays(datestart: Date, dateEnd: Date): number {
+        return differenceInDays(datestart, dateEnd);
     }
 }
 
