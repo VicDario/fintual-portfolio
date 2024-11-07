@@ -63,11 +63,13 @@ class PortfolioService implements IPortfolioService {
         return this._mapper.map({ profit: data.profit, annualizedReturn });
     }
 
-    calculateStockProfit = (
+    calculateStockProfit(
         stockAmount: number,
         initialValue: number,
         finalValue: number,
-    ): number => stockAmount * (finalValue - initialValue); // JS things can be resolve with a safe currrency library :D
+    ): number {
+        return stockAmount * (finalValue - initialValue); // JS things can be resolve with a safe currrency library :D
+    }
 
     calculateAnnualizedReturn(
         initialValue: number,
